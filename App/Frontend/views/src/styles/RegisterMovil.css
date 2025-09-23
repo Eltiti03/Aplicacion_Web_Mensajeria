@@ -1,0 +1,60 @@
+/* Media Querys */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .register-card {
+    max-width: 300px;
+    padding: 1.5rem;
+  }
+
+  .register-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .register-group input {
+    font-size: 0.9rem;
+    padding: 0.55rem;
+  }
+
+  .register-btn {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+  .register-container {
+    padding: 1rem; /* 🔹 evita que se pegue a los bordes */
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 90%;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .register-card h1 {
+    font-size: 1.3rem;
+  }
+
+  .register-group label {
+    font-size: 0.85rem;
+  }
+
+  .register-group input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .register-btn {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+}

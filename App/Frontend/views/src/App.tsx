@@ -1,10 +1,17 @@
-import Login from "./pages/Login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register"; // crea este componente aunque esté vacío
+import Home from "./Pages/Home";
 
 function App() {
   return (
-    <div className="App">
-      <Login />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+        <Route path="/Home" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

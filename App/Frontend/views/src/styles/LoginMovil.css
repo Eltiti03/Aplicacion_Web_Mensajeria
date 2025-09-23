@@ -1,0 +1,66 @@
+/* Media Querys */
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .login-card {
+    max-width: 300px;
+    padding: 1.5rem;
+  }
+
+  .login-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-group input {
+    font-size: 0.9rem;
+    padding: 0.55rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+}
+
+/* Móvil */
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem; /* 🔹 evita que se pegue a los bordes */
+  }
+
+  .logout-icon {
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 22px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 90%;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .login-card h1 {
+    font-size: 1.3rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  button {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+}

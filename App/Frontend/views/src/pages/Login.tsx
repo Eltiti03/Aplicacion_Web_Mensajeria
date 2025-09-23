@@ -1,55 +1,63 @@
+//Login.tsx
+
 import { useState } from "react";
-// import "../styles/Login";
+import { Link } from "react-router-dom";
+import "../Styles/Login.css";
+import "../Styles/LoginMovil.css";
+import "./Register";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [USER, setUsername] = useState("");
+  const [PASSWORD, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!USER || !PASSWORD) {
       setError("Debes completar todos los campos");
+      setTimeout(() => setError(""), 1700);
       return;
     }
 
     setError("");
-    console.log("✅ Login enviado:", { username, password });
-    // Aquí después conectamos al backend o WebSocket
+    console.log("Login enviado:", { USER, PASSWORD });
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1>Iniciar sesión</h1>
+    <body>
+      <div className="login-container">
+        <div className="login-card">
+          <h1>INICIAR SESION</h1>
 
-        {error && <p className="error">{error}</p>}
+          {error && <p className="error">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Usuario</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Tu nombre de usuario"
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                type="text"
+                value={USER}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Usuario"
+              />
+            </div>
 
-          <div className="form-group">
-            <label>Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-            />
-          </div>
+            <div className="form-group">
+              <input
+                type="PASSWORD"
+                value={PASSWORD}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••"
+              />
+            </div>
 
-          <button type="submit">Entrar</button>
-        </form>
+            <button type="submit">Entrar</button>
+            <p className="label-register">
+              ¿No tienes cuenta? <Link to="/Register">Regístrate</Link>
+            </p>
+          </form>
+        </div>
       </div>
-    </div>
+    </body>
   );
 }
