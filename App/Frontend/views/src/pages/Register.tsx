@@ -1,6 +1,7 @@
 //Register.tsx
 
 import { useState } from "react";
+import "../Styles/RegisterMovil.css";
 import "../Styles/Register.css";
 
 function Register() {
@@ -23,39 +24,37 @@ function Register() {
   };
 
   return (
-    <body>
-      <div className="register-container">
-        <div className="register-card">
-          <h1>REGISTRO</h1>
+    <div className="register-container">
+      <div className="register-card">
+        <h1>REGISTRO</h1>
 
-          {message && <p className="register-error">{message}</p>}
+        {message && <p className="register-error">{message}</p>}
 
-          <form onSubmit={handleS}>
-            <div className="register-group">
-              <input
-                type="text"
-                value={USER}
-                onChange={(e) => setUser(e.target.value)}
-                placeholder="Usuario"
-              />
-            </div>
+        <form onSubmit={handleS}>
+          <div className="register-group">
+            <input
+              type="text"
+              value={USER}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="Usuario"
+            />
+          </div>
 
-            <div className="register-group">
-              <input
-                type="password"
-                value={PASSWORD}
-                onChange={(e) => setPass(e.target.value)}
-                placeholder="••••••"
-              />
-            </div>
+          <div className="register-group">
+            <input
+              type="password"
+              value={PASSWORD}
+              onChange={(e) => setPass(e.target.value)}
+              placeholder="••••••"
+            />
+          </div>
 
-            <button className="register-btn" type="submit">
-              Registrarte
-            </button>
-          </form>
-        </div>
+          <button className="register-btn" type="submit">
+            Registrarte
+          </button>
+        </form>
       </div>
-    </body>
+    </div>
   );
 }
 

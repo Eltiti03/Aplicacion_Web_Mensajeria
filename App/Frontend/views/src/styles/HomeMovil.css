@@ -95,6 +95,10 @@
     padding: 0.4rem 0.8rem;
     font-size: 0.75rem;
   }
+
+  .group-icon {
+    margin-left: 10px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -123,5 +127,12 @@
   .chat-input button {
     font-size: 0.75rem;
     padding: 0.3rem 0.8rem;
+  }
+  .span-icon {
+    text-align: center;
+  }
+
+  .group-icon {
+    margin-left: 10px;
   }
 }

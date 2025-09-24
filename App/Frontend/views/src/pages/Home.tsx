@@ -1,36 +1,22 @@
 import { useState } from "react";
 import "../Styles/Home.css";
 import "../Styles/HomeMovil.css";
-import LogoutIcon from "../assets/Logout.png"; // 🔹 importa tu icono
+import LogoutIcon from "../assets/Logout.png";
+import GroupAdd from "../assets/group_add.png";
 
 interface Chat {
   id: string;
   user: string;
   messages: { from: string; text: string }[];
+  isGroup?: boolean; // 🔹 Nuevo campo para distinguir grupos
 }
 
 export default function Home() {
   const [chats, setChats] = useState<Chat[]>([
-    {
-      id: "1",
-      user: "John",
-      messages: [{ from: "Juan", text: "Ey bro!" }],
-    },
-    {
-      id: "2",
-      user: "Jose",
-      messages: [{ from: "", text: "" }],
-    },
-    {
-      id: "3",
-      user: "Javier",
-      messages: [{ from: "", text: "" }],
-    },
-    {
-      id: "4",
-      user: "Julian",
-      messages: [{ from: "", text: "" }],
-    },
+    { id: "1", user: "John", messages: [{ from: "Juan", text: "Ey bro!" }] },
+    { id: "2", user: "Jose", messages: [] },
+    { id: "3", user: "Javier", messages: [] },
+    { id: "4", user: "Julian", messages: [] },
   ]);
 
   const [activeChat, setActiveChat] = useState<Chat | null>(chats[0]);
@@ -58,7 +44,35 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    alert("Sesión cerrada ✅"); // aquí va tu lógica real de logout
+    alert("Sesión cerrada ✅");
+  };
+
+  const [newGroupName, setNewGroupName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCreateGroup = () => {
+    if (!newGroupName.trim()) {
+      alert("El nombre del grupo no puede estar vacío");
+      return;
+    }
+
+    if (chats.some((chat) => chat.user === newGroupName)) {
+      alert("Ya existe un grupo o chat con ese nombre");
+      return;
+    }
+
+    const newGroup: Chat = {
+      id: String(Date.now()),
+      user: newGroupName,
+      messages: [],
+      isGroup: true,
+    };
+
+    setChats([...chats, newGroup]);
+    console.log("Grupo creado:", newGroupName);
+
+    setNewGroupName("");
+    setIsModalOpen(false);
   };
 
   return (
@@ -77,25 +91,38 @@ export default function Home() {
               }`}
               onClick={() => setActiveChat(chat)}
             >
-              <span>{chat.user}</span>
+              <span className="span-icon">
+                {chat.isGroup ? "👥 " : "👤 "}
+                {chat.user}
+              </span>
             </div>
           ))}
         </div>
 
-        {/* 🔹 Icono de logout en vez de botón */}
-        <img
-          src={LogoutIcon}
-          alt="Cerrar sesión"
-          className="logout-icon"
-          onClick={handleLogout}
-        />
+        <div className="rowIcon">
+          <img
+            src={GroupAdd}
+            alt="Crear Grupo"
+            className="group-icon"
+            onClick={() => setIsModalOpen(true)}
+          />
+          <img
+            src={LogoutIcon}
+            alt="Cerrar sesión"
+            className="logout-icon"
+            onClick={handleLogout}
+          />
+        </div>
       </aside>
 
       <main className="chat-window">
         {activeChat ? (
           <>
             <header className="chat-header">
-              <h2>{activeChat.user}</h2>
+              <h2>
+                {activeChat.isGroup ? "👥 " : "👤 "}
+                {activeChat.user}
+              </h2>
             </header>
 
             <div className="messages">
@@ -130,6 +157,24 @@ export default function Home() {
           <div className="no-chat">Selecciona un chat para comenzar</div>
         )}
       </main>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Nuevo Grupo</h3>
+            <input
+              type="text"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              placeholder="Nombre del grupo"
+            />
+            <div className="modal-actions">
+              <button onClick={handleCreateGroup}>Crear</button>
+              <button onClick={() => setIsModalOpen(false)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

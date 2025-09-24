@@ -14,8 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
     "express": "5.1.0",
-    "ws": "^8.18.3"
+    "mariadb": "^3.4.5",
+    "ws": "^8.18.3",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

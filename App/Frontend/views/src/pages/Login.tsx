@@ -25,7 +25,6 @@ export default function Login() {
   };
 
   return (
-    <body>
       <div className="login-container">
         <div className="login-card">
           <h1>INICIAR SESION</h1>
@@ -58,6 +57,5 @@ export default function Login() {
           </form>
         </div>
       </div>
-    </body>
   );
 }

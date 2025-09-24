@@ -3,9 +3,11 @@
 import express from "express";
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
+import { router } from "./models/routes/rChats.js";
 
 const app = express();
 app.use(express.json());
+app.use("/", router);
 
 const server = createServer(app);
 
