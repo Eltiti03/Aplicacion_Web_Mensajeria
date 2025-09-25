@@ -1,3 +1,5 @@
+//App.ts
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register"; // crea este componente aunque esté vacío

@@ -1,26 +1,49 @@
 //Register.tsx
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../Styles/RegisterMovil.css";
 import "../Styles/Register.css";
+import axios from "axios";
 
 function Register() {
-  const [USER, setUser] = useState("");
-  const [PASSWORD, setPass] = useState("");
+  const [MAIL, setUsername] = useState("");
+  const [PASS, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleS = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
 
-    if (!USER || !PASSWORD) {
+    if (!MAIL || !PASS) {
       setMessage("Debes completar todos los campos");
       setTimeout(() => setMessage(""), 1700);
       return;
     }
 
-    setMessage("");
-    console.log("Usuario Registrado:", { USER, PASSWORD });
+    const res = await axios.post("http://localhost:1235/", { MAIL, PASS });
+
+    try {
+      console.log(res.data.success);
+      if (res.data.success) {
+        console.log("Navegando a /...");
+        setUsername("");
+        setPassword("");
+        navigate("/");
+      } else {
+        setMessage("Usuario o contraseña incorrectos!!");
+        setTimeout(() => setMessage(""), 1700);
+      }
+
+      setMessage("");
+      console.log("Login enviado:", { MAIL, PASS });
+    } catch (error: unknown) {
+      console.log(error);
+      setMessage("Error de conexion en el servidor...");
+      setTimeout(() => setMessage(""), 1700);
+    }
   };
 
   return (
@@ -34,8 +57,8 @@ function Register() {
           <div className="register-group">
             <input
               type="text"
-              value={USER}
-              onChange={(e) => setUser(e.target.value)}
+              value={MAIL}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Usuario"
             />
           </div>
@@ -43,8 +66,8 @@ function Register() {
           <div className="register-group">
             <input
               type="password"
-              value={PASSWORD}
-              onChange={(e) => setPass(e.target.value)}
+              value={PASS}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
             />
           </div>

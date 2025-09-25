@@ -2,11 +2,11 @@ import { randomUUID } from "crypto";
 import mariadb from "mariadb";
 const pool = mariadb.createPool({
     host: "192.168.0.169",
-    user: "root",
-    port: 3037,
-    password: "rootpassword",
+    user: "JULIAN1044",
+    port: 3307,
+    password: "1234567890",
     database: "CHAT_WEB",
-    connectionLimit: 100,
+    connectionLimit: 10,
     bigIntAsNumber: true,
 });
 export class Chat_Web {
@@ -23,6 +23,21 @@ export class Chat_Web {
             const mensaje = { info: result };
             console.log(mensaje);
             return newClient;
+        }
+        catch (error) {
+            throw error;
+        }
+        finally {
+            if (conn)
+                conn.release();
+        }
+    }
+    static async mgetClient() {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            const result = await conn.query("SELECT * FROM USERS");
+            return result;
         }
         catch (error) {
             throw error;

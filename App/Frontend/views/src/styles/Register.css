@@ -53,14 +53,16 @@
   outline: none;
 }
 
-/* Botón */
-.register-btn {
-  width: 100%;
-  padding: 0.8rem;
+button {
+  display: block;
+  width: auto;
+  min-width: 120px;
+  padding: 0.6rem 1.2rem;
+  margin: 1rem auto 0;
   background: #2575fc;
+  color: #fff;
   border: none;
   border-radius: 6px;
-  color: #fff;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
