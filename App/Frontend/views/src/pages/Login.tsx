@@ -1,7 +1,7 @@
 //Login.tsx
 
 import { useState } from "react";
-import { Link /*useNavigate*/ } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/Login.css";
 import "../Styles/LoginMovil.css";
 import axios from "axios";
@@ -10,21 +10,39 @@ import "./Register";
 export default function Login() {
   const [MAIL, setUsername] = useState("");
   const [PASS, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setMessage] = useState("");
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!MAIL || !PASS) {
-      setError("Debes completar todos los campos");
-      setTimeout(() => setError(""), 1700);
+      setMessage("Debes completar todos los campos");
+      setTimeout(() => setMessage(""), 1700);
       return;
     }
 
-    const res = await axios.post("http://localhost:1235/", { MAIL, PASS });
+    const res = await axios.post("http://localhost:1235/", {
+      MAIL,
+      PASS,
+    });
     console.log(res);
+
+    try {
+      console.log(res.data.success);
+      if (res.data.success) {
+        setUsername("");
+        setPassword("");
+        navigate("/Home");
+      }
+      setMessage("Usuario o contraseña incorrectos!!");
+      setTimeout(() => setMessage(""), 1700);
+    } catch (err) {
+      console.log(err);
+      setMessage("Error de conexion en el servidor...");
+      setTimeout(() => setMessage(""), 1700);
+    }
   };
 
   return (

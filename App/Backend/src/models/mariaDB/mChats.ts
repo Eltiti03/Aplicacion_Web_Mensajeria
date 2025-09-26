@@ -18,7 +18,7 @@ export interface client {
 }
 
 export class Chat_Web {
-  static async postaggClient(input: client) {
+  static async mpostaggClient(input: client) {
     let conn;
     try {
       conn = await pool.getConnection();
@@ -43,14 +43,24 @@ export class Chat_Web {
     }
   }
 
-  static async mpostLogin(input: client) {
+  static async mpostLogin(correo: client) {
     let conn;
     try {
       conn = await pool.getConnection();
-      const mLogin = {
-        MAIL: input.MAIL,
-        PASS: input.PASS,
-      };
+      /*const mLogin = {
+        MAIL: correo.MAIL,
+        PASS: correo.PASS,
+      };*/
+      const result = await conn.query("SELECT * FROM USERS WHERE MAIL = ?", [
+        correo.MAIL,
+      ]);
+      if (result.length !== 0) {
+        const mensaje = { info: result };
+        console.log(mensaje);
+        return result;
+      } else {
+        return false;
+      }
     } catch (error) {
     } finally {
       if (conn) conn.release();

@@ -23,7 +23,10 @@ function Register() {
       return;
     }
 
-    const res = await axios.post("http://localhost:1235/", { MAIL, PASS });
+    const res = await axios.post("http://localhost:1235/register", {
+      MAIL,
+      PASS,
+    });
 
     try {
       console.log(res.data.success);

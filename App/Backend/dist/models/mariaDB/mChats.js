@@ -10,7 +10,7 @@ const pool = mariadb.createPool({
     bigIntAsNumber: true,
 });
 export class Chat_Web {
-    static async postaggClient(input) {
+    static async mpostaggClient(input) {
         let conn;
         try {
             conn = await pool.getConnection();
@@ -26,6 +26,33 @@ export class Chat_Web {
         }
         catch (error) {
             throw error;
+        }
+        finally {
+            if (conn)
+                conn.release();
+        }
+    }
+    static async mpostLogin(correo) {
+        let conn;
+        try {
+            conn = await pool.getConnection();
+            /*const mLogin = {
+              MAIL: correo.MAIL,
+              PASS: correo.PASS,
+            };*/
+            const result = await conn.query("SELECT * FROM USERS WHERE MAIL = ?", [
+                correo.MAIL,
+            ]);
+            if (result.length !== 0) {
+                const mensaje = { info: result };
+                console.log(mensaje);
+                return result;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (error) {
         }
         finally {
             if (conn)
