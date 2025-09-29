@@ -30,14 +30,15 @@ export class cChatsWeb {
             else {
                 const cLogin = await Chat_Web.mpostLogin(result.data);
                 console.log({ Mail: cLogin[0].MAIL, Pass: cLogin[0].PASS });
-                if (!cLogin[0].MAIL || !cLogin[0].PASS) {
+                const reqLogin = result.data;
+                if (cLogin[0].MAIL === reqLogin.MAIL &&
+                    cLogin[0].PASS === reqLogin.PASS) {
+                    res.status(201).json({ success: true, reqLogin });
+                }
+                else {
                     res
                         .status(401)
                         .json({ success: false, message: "Credencuales invalidadas..." });
-                }
-                else {
-                    const reqLogin = result.data;
-                    res.status(201).json({ success: true, reqLogin });
                 }
             }
         }

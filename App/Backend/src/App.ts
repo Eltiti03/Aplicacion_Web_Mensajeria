@@ -25,15 +25,27 @@ const port = process.env.PORT ?? 1235;
 const WSS = new WebSocketServer({ server });
 
 WSS.on("connection", (ws) => {
-  console.log("EL valecita esta conectado!!");
-});
+  console.log("✅ Cliente conectado");
 
-WSS.on("message", (data) => {
-  console.log("R: ", data.toString());
-});
+  // Evento cuando el cliente manda un mensaje
+  ws.on("message", (data) => {
+    console.log("📩 Mensaje recibido:", data.toString());
 
-WSS.on("close", () => {
-  console.log("EL vale ya se fue...");
+    // Puedes responder al mismo cliente
+    ws.send("Mensaje recibido: " + data.toString());
+
+    // O reenviar a todos los clientes conectados (broadcast)
+    WSS.clients.forEach((client) => {
+      if (client.readyState === ws.OPEN) {
+        client.send(`Broadcast: ${data.toString()}`);
+      }
+    });
+  });
+
+  // Evento cuando el cliente se desconecta
+  ws.on("close", () => {
+    console.log("❌ Cliente desconectado");
+  });
 });
 
 server.listen(port, () => {
