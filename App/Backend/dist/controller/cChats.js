@@ -1,9 +1,11 @@
 import { Chat_Web } from "../models/mariaDB/mChats.js";
 import { validateLogin, validateUser } from "../models/validations/schemas.js";
+import bcrypt from "bcrypt";
 export class cChatsWeb {
     static async cpostaggClient(req, res) {
         try {
             const result = validateUser(req.body);
+            console.log(req.body);
             console.log({ success: result });
             if (!result.success) {
                 return res
@@ -29,16 +31,18 @@ export class cChatsWeb {
             }
             else {
                 const cLogin = await Chat_Web.mpostLogin(result.data);
-                console.log({ Mail: cLogin[0].MAIL, Pass: cLogin[0].PASS });
+                const pass = result.data.PASS_HASH;
                 const reqLogin = result.data;
+                const hash_val = await bcrypt.compare(pass, cLogin[0].PASS_HASH);
                 if (cLogin[0].MAIL === reqLogin.MAIL &&
-                    cLogin[0].PASS === reqLogin.PASS) {
+                    hash_val === true) {
+                    console.log("credenciales correctas!!");
                     res.status(201).json({ success: true, reqLogin });
                 }
                 else {
                     res
                         .status(401)
-                        .json({ success: false, message: "Credencuales invalidadas..." });
+                        .json({ success: false, message: "Credenciales invalidadas..." });
                 }
             }
         }

@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import mariadb from "mariadb";
+import bcrypt from "bcrypt";
 const pool = mariadb.createPool({
     host: "192.168.0.169",
     user: "JULIAN1044",
@@ -17,9 +18,11 @@ export class Chat_Web {
             const newClient = {
                 ID: randomUUID(),
                 MAIL: input.MAIL,
-                PASS: input.PASS,
+                PASS_HASH: input.PASS_HASH,
             };
-            const result = await conn.query("INSERT INTO USERS (ID, MAIL, PASS) VALUE (?,?,?)", [newClient.ID, newClient.MAIL, newClient.PASS]);
+            const hash = await bcrypt.hash(newClient.PASS_HASH, 12);
+            //console.log({encrypt: hash})
+            const result = await conn.query("INSERT INTO USERS (ID, MAIL, PASS_HASH) VALUE (?,?,?)", [newClient.ID, newClient.MAIL, hash]);
             const mensaje = { info: result };
             console.log(mensaje);
             return newClient;
@@ -44,8 +47,8 @@ export class Chat_Web {
                 correo.MAIL,
             ]);
             if (result.length !== 0) {
-                const mensaje = { info: result };
-                console.log(mensaje);
+                //        const mensaje = { info: result };
+                //        console.log(mensaje);
                 return result;
             }
             else {
@@ -75,3 +78,17 @@ export class Chat_Web {
         }
     }
 }
+// EVENTOS WEBSOCKET 
+/*async function saveMessage (ID: string, USER: string, CONTENT: string) {
+  let conn
+  try {
+    conn = await pool.getConnection()
+    const result = await conn.query('INSERT INTO MESSAGE (CHAT_ID, USERNAME, CONTENT) VALUES (?, ?, ?)', [ID, USER, CONTENT])
+    console.log(result)
+    return result
+  } catch (error) {
+    throw error
+  } finally{
+    if (conn) conn.release()
+  }
+}*/ 

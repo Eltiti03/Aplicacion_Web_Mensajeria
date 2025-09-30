@@ -5,11 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import "../Styles/Login.css";
 import "../Styles/LoginMovil.css";
 import axios from "axios";
-import "./Register";
 
 export default function Login() {
   const [MAIL, setUsername] = useState("");
-  const [PASS, setPassword] = useState("");
+  const [PASS_HASH, setPassword] = useState("");
   const [error, setMessage] = useState("");
 
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!MAIL || !PASS) {
+    if (!MAIL || !PASS_HASH) {
       setMessage("Debes completar todos los campos");
       setTimeout(() => setMessage(""), 1700);
       return;
@@ -25,7 +24,7 @@ export default function Login() {
 
     const res = await axios.post("http://localhost:1235/", {
       MAIL,
-      PASS,
+      PASS_HASH
     });
     console.log(res);
 
@@ -65,7 +64,7 @@ export default function Login() {
           <div className="form-group">
             <input
               type="PASSWORD"
-              value={PASS}
+              value={PASS_HASH}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
             />

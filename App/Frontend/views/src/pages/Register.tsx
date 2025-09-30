@@ -8,7 +8,7 @@ import axios from "axios";
 
 function Register() {
   const [MAIL, setUsername] = useState("");
-  const [PASS, setPassword] = useState("");
+  const [PASS_HASH, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Register() {
     e.preventDefault();
     setMessage("");
 
-    if (!MAIL || !PASS) {
+    if (!MAIL || !PASS_HASH) {
       setMessage("Debes completar todos los campos");
       setTimeout(() => setMessage(""), 1700);
       return;
@@ -25,7 +25,7 @@ function Register() {
 
     const res = await axios.post("http://localhost:1235/register", {
       MAIL,
-      PASS,
+      PASS_HASH,
     });
 
     try {
@@ -41,7 +41,7 @@ function Register() {
       }
 
       setMessage("");
-      console.log("Login enviado:", { MAIL, PASS });
+      console.log("Login enviado:", { MAIL, PASS_HASH });
     } catch (error: unknown) {
       console.log(error);
       setMessage("Error de conexion en el servidor...");
@@ -69,7 +69,7 @@ function Register() {
           <div className="register-group">
             <input
               type="password"
-              value={PASS}
+              value={PASS_HASH}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
             />
