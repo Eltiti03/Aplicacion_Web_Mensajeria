@@ -58,4 +58,9 @@ export class cChatsWeb {
       res.status(500).json({ error: "Error del servidor!! (getClients)" });
     }
   }
+
+// CONTROLADORES DE EVENTOS WEBSOCKET
+
+WSS.on()
+
 }
