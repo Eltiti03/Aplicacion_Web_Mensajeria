@@ -84,19 +84,3 @@ export class Chat_Web {
     }
   }
 }
-
-// EVENTOS WEBSOCKET 
-
-/*async function saveMessage (ID: string, USER: string, CONTENT: string) {
-  let conn
-  try {
-    conn = await pool.getConnection()
-    const result = await conn.query('INSERT INTO MESSAGE (CHAT_ID, USERNAME, CONTENT) VALUES (?, ?, ?)', [ID, USER, CONTENT])
-    console.log(result)
-    return result
-  } catch (error) {
-    throw error
-  } finally{
-    if (conn) conn.release()
-  }
-}*/

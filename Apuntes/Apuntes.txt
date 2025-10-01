@@ -1,0 +1,459 @@
+- Algunos comandos y metodos
+
+INICIALIZAR PROYECTOS:
+
+- para inicializar node:
+
+npm init (crea el package.json)
+
+- para inicializar express
+
+npm install -E express
+
+- para instalar e iniciailzar TypeScript
+
+1. npm install typescript --save-dev
+2. npx tsc --init (crea el tsconfig.json)
+3. npm install -D @types/express
+4. npm install -D ts-node-dev --> Este paquete te permite ejecutar TypeScript directo y reinicia el servidor automáticamente cuando cambias código.
+5. luego en el "scripts": { } de tu package.js debes colocar [ "dev": "ts-node-dev --respawn --transpile-only src/app.ts" ]
+
+CONFIGURACION DE TS EN ts.config.json:
+
+- strict: true → activa todas las comprobaciones estrictas de TypeScript (mejor detección de errores).
+- forceConsistentCasingInFileNames: true → obliga a usar el mismo estilo de mayúsculas/minúsculas en los nombres de archivo.
+- rootDir: "./src/" → indica la carpeta donde está el código fuente en TypeScript.
+- outDir: "./dist/" → carpeta de salida donde se guardarán los archivos compilados en JavaScript.
+- noUnusedLocals: true → muestra error si declaras variables locales que no usas.
+- lib: ["ES2024"] → habilita las librerías del estándar JavaScript hasta ES2024 (últimas funciones).
+- target: "ES2024" → convierte tu código a JavaScript moderno compatible con Node.js actual.
+- moduleResolution: "nodenext" → controla cómo se resuelven los módulos (import/export) en Node.js.
+- module: "nodenext" → especifica el sistema de módulos; recomendado para proyectos modernos en Node.js con ESModules.
+- esModuleInterop: true → permite usar import express from "express"; en lugar de import * as express from "express";.
+- skipLibCheck: true → ignora errores en los archivos de tipos (.d.ts), acelera la compilación.
+- resolveJsonModule: true → permite importar archivos .json directamente (import data from "./data.json";).
+- noImplicitAny: true → obliga a declarar siempre el tipo si TypeScript no lo puede inferir.
+- strictNullChecks: true → obliga a tratar null y undefined como valores distintos (evita muchos errores).
+- allowSyntheticDefaultImports: true → permite usar import x from "lib" aunque la librería no tenga export default.
+- declaration: true → genera archivos .d.ts (útil si vas a publicar tu paquete en npm).
+- incremental: true → hace compilaciones más rápidas guardando caché de la última compilación.
+- sourceMap: true → genera mapas de código (.map) para depurar TypeScript en el navegador o VSCode.
+- types: ["node", "express"] → indica qué definiciones de tipos se cargan automáticamente.
+
+
+MATAR UN PUERTO:
+
+Busca el proceso que usa el puerto:
+
+netstat -ano | findstr :(Numero del puerto)
+
+Mata el proceso con:
+
+taskkill /PID (Numero del puerto) /F
+
+
+METODOS PARA EL MANEJO DE LOS SERVIDORES EXPRESS:
+
+
+el REQ:
+
+
+req.method → el verbo HTTP (GET, POST, PUT, DELETE, etc.)
+
+req.url → la URL que pidió el cliente
+
+req.headers → encabezados de la petición (User-Agent, Content-Type, Authorization, etc.)
+
+req.query → parámetros en la query string (?name=Julian&age=25)
+
+req.params → parámetros en la ruta (/users/:id)
+
+req.body → el cuerpo de la petición (si envías JSON o formulario)
+
+
+el REST:
+
+
+res.send() → enviar texto, JSON o HTML
+
+res.json() → enviar un objeto como JSON
+
+res.status() → establecer un código de estado (200, 404, 500, etc.)
+
+res.end() → cerrar la respuesta
+
+res.setHeader() → modificar encabezados de la respuesta
+
+
+METODOS DE LOS ARRAYS:
+
+
+.find(cb) → devuelve el primer elemento que cumpla la condición o undefined.
+
+.findIndex(cb) → devuelve la posición (índice) del primer elemento que cumpla la condición, o -1 si no existe.
+
+.includes(valor) → devuelve true/false si el valor está en el array.
+
+.some(cb) → true si al menos un elemento cumple la condición.
+
+.every(cb) → true si todos los elementos cumplen la condición.
+
+.filter(cb) → devuelve un nuevo array con todos los elementos que cumplan la condición.
+
+.map(cb) → devuelve un nuevo array transformando cada elemento.
+
+.flat() → aplana arrays anidados en un solo nivel.
+
+.flatMap(cb) → combina .map() + .flat().
+
+.reduce(cb, valorInicial) → acumula los valores en un único resultado (suma, promedio, etc.).
+
+.reduceRight(cb, valorInicial) → igual que reduce, pero de derecha a izquierda.
+
+.push(valor) → agrega al final del array.
+
+.pop() → elimina el último elemento.
+
+.unshift(valor) → agrega al inicio.
+
+.shift() → elimina el primero.
+
+.splice(indice, cantidad, ...elementos) → agrega o elimina elementos en una posición específica.
+
+.slice(inicio, fin) → devuelve una copia parcial del array (sin modificar el original).
+
+.sort(cb) → ordena el array en su lugar (cuidado, modifica el original).
+
+.reverse() → invierte el orden del array (también lo modifica).
+
+.forEach(cb) → recorre el array y ejecuta algo en cada elemento (no devuelve nada).
+
+.entries() → devuelve pares [índice, valor].
+
+.keys() → devuelve un iterador con los índices.
+
+.values() → devuelve un iterador con los valores.
+
+
+
+
+VALIDACIONES CON ZOD:
+
+
+Creación de esquemas básicos
+
+z.string()     // cadena de texto
+z.number()     // número (puede ser int o float)
+z.boolean()    // true/false
+z.date()       // fecha (Date object)
+z.null()       // valor null
+z.undefined()  // valor undefined
+z.any()        // acepta cualquier cosa (no recomendado salvo casos especiales)
+z.unknown()    // acepta cualquier valor pero sin operaciones posteriores
+z.never()      // nunca válido
+
+
+Métodos de validación para string
+
+z.string().min(3)                           // longitud mínima
+z.string().max(20)                          // longitud máxima
+z.string().length(10)                       // longitud exacta
+z.string().email()                          // debe ser email válido
+z.string().url()                            // debe ser URL válida
+z.string().uuid()                           // UUID válido
+z.string().regex(/^[a-z]+$/)                // validar con regex
+z.string().startsWith("abc")                // debe iniciar con "abc"
+z.string().endsWith("xyz")                  // debe terminar con "xyz"
+z.string().datetime()                       // fecha/hora ISO string
+nonempty("El título es obligatorio")        // valida que no esté vacío
+
+
+Métodos de validación para number
+
+z.number().int()          // debe ser entero
+z.number().positive()     // > 0
+z.number().nonnegative()  // >= 0
+z.number().negative()     // < 0
+z.number().nonpositive()  // <= 0
+z.number().gt(10)         // > 10
+z.number().gte(10)        // >= 10
+z.number().lt(100)        // < 100
+z.number().lte(100)       // <= 100
+z.number().finite()       // no infinito
+z.number().safe()         // debe ser un número seguro de JS
+
+
+Arrays
+
+z.array(z.string())             // array de strings
+z.array(z.number()).nonempty()  // array de números que no puede estar vacío
+z.array(z.string()).min(2)      // mínimo 2 elementos
+z.array(z.string()).max(5)      // máximo 5 elementos
+
+
+Objetos
+
+z.object({
+  name: z.string(),
+  age: z.number().int()
+})
+
+Extras:
+
+.strict()   // no permite claves extra
+.partial()  // hace que todos los campos sean opcionales
+.pick({ key: true }) // selecciona ciertos campos
+.omit({ key: true }) // omite ciertos campos
+.extend({ newField: z.string() }) // añade nuevos campos
+.merge(z.object({})) // combina con otro objeto
+
+
+Uniones y combinaciones:
+
+z.union([z.string(), z.number()])   // puede ser string o number
+z.enum(["A", "B", "C"])             // valores permitidos
+z.literal("fixedValue")             // valor fijo
+z.nativeEnum(MyEnum)                // usar enums de TS
+z.intersection(z.string(), z.string().min(3)) // combina reglas
+
+
+Opcionales y valores nulos:
+
+z.string().optional()   // string o undefined
+z.string().nullable()   // string o null
+z.string().nullish()    // string o null o undefined
+
+
+Transformaciones y refinamientos:
+
+z.string().transform(val => val.toUpperCase()) // transforma valor
+z.number().refine(val => val % 2 === 0, {
+  message: "Debe ser par"
+}) // validación custom
+
+
+Métodos de validación de datos:
+
+schema.parse(data)       // valida y lanza error si es inválido
+schema.safeParse(data)   // valida y devuelve { success, data | error }
+schema.check(data)       // booleano: true si pasa validación
+
+
+Métodos para reutilización:
+
+z.preprocess(val => Number(val), z.number()) // transforma antes de validar
+z.lazy(() => schema)   // para validaciones recursivas
+z.record(z.string())   // objeto con claves dinámicas
+z.map(z.string(), z.number()) // mapa de clave-valor
+z.set(z.string())      // conjunto de strings
+
+
+
+COMANDOS ESCENSIALES DOCKER:
+
+
+#Se usa "sudo" para obtener permisos de super usuario, si no es necesario, no se usa
+
+
+Conexión y edición
+
+
+ssh usuario@IP → Conectarse a un servidor remoto por SSH.
+
+sudo nano archivo → Abrir el editor nano con permisos de administrador para editar archivos (ej: docker-compose.yml).
+
+
+🔑 Linux básico
+
+pwd	Muestra la ruta del directorio actual.
+
+ls -la	Lista archivos (incluyendo ocultos y permisos).
+
+cd <ruta>	Cambia de directorio.
+
+mkdir <nombre>	Crea una carpeta.
+
+rm -rf <carpeta>	Elimina carpeta y su contenido (⚠️ cuidado).
+
+cp origen destino	Copia archivos o carpetas.
+
+mv origen destino	Mueve o renombra archivos.
+
+cat archivo	Muestra el contenido de un archivo.
+
+tail -f archivo.log	Muestra en vivo las últimas líneas de un log.
+
+top o htop	Muestra procesos y consumo de CPU/RAM.
+
+sudo apt update && sudo apt upgrade -y	Actualiza el sistema (Ubuntu/Debian).
+
+
+🐳 Docker básico
+
+
+sudo docker ps → Lista los contenedores en ejecución.
+
+sudo docker ps -a → Lista todos los contenedores (ejecutándose o detenidos).
+
+sudo docker stop <nombre> → Detiene un contenedor en ejecución.
+
+sudo docker start <nombre_contenedor>
+
+sudo docker rm <nombre> → Elimina un contenedor detenido.
+
+sudo docker images → Muestra las imágenes descargadas en tu máquina.
+
+sudo docker rmi <imagen> → Elimina una imagen (si no está en uso).
+
+
+⚙️ Docker Compose
+
+
+sudo docker compose up -d → Levanta todos los servicios definidos en docker-compose.yml en modo detached (en segundo plano).
+
+sudo docker compose down → Detiene y elimina los contenedores y la red creada por Docker Compose.
+
+sudo docker compose down -v → Lo mismo que arriba, pero también elimina volúmenes (datos persistentes como bases de datos).
+
+sudo docker compose build	Construye las imágenes según el docker-compose.yml.
+
+sudo docker compose restart	Reinicia los servicios definidos en el compose.
+
+sudo docker compose logs -f	Muestra logs en tiempo real de todos los servicios.
+
+sudo docker compose exec <servicio> bash	Entra a un contenedor de un servicio (ej: mariadb).
+
+
+🧹 Limpieza
+
+
+sudo docker system prune → Elimina contenedores detenidos, redes no usadas e imágenes huérfanas (no borra volúmenes).
+
+sudo docker system prune -a --volumes → Limpieza total: elimina todo lo no usado, incluidas imágenes y volúmenes (borra datos persistentes).
+
+sudo docker rm -f $(sudo docker ps -aq)	Detiene y elimina todos los contenedores.
+
+sudo docker rmi -f $(sudo docker images -q)	Borra todas las imágenes.
+
+sudo docker volume prune	Elimina volúmenes no usados.
+
+sudo docker network prune	Elimina redes no usadas.
+
+
+
+
+🐳 Docker + sudo / permisos de usuario
+
+
+
+1️⃣ Revisar contenedores
+sudo docker ps
+
+
+Lista los contenedores en ejecución.
+
+Con sudo se obtienen permisos para hablar con el daemon de Docker.
+
+2️⃣ Permitir usar Docker sin sudo
+sudo usermod -aG docker colmotica
+
+
+usermod → modifica usuarios.
+
+-aG docker → agrega al usuario al grupo docker.
+
+Después de esto, hay que cerrar sesión y volver a entrar.
+
+✅ Luego puedes ejecutar:
+
+docker ps
+
+
+👉 sin sudo.
+
+3️⃣ Volver al modo seguro (solo con sudo)
+sudo gpasswd -d colmotica docker
+
+
+gpasswd -d → elimina al usuario del grupo.
+
+Después de cerrar sesión y volver a entrar:
+
+docker ps → dará permission denied.
+
+sudo docker ps → funcionará normalmente.
+
+
+
+
+🐳 Tutorial: Crear una base de datos independiente en MariaDB y asignar permisos
+
+
+
+1️⃣ Entrar al contenedor MariaDB como root
+
+
+- sudo docker exec -it mariadb_container mariadb -u root -p
+
+
+docker exec -it → ejecuta un comando dentro de un contenedor en modo interactivo.
+
+mariadb -u root -p → abre el cliente MariaDB con usuario root.
+
+****** Te pedirá la contraseña que configuraste en docker-compose.yml (rootpassword).
+
+
+
+2️⃣ Crear una base de datos independiente
+
+
+- CREATE DATABASE (NOMBRE DE LA BASE DE DATOS);
+
+
+Esto crea una base independiente de cualquier otra que exista (BD_JULIAN).
+
+
+3️⃣ Crear o asignar permisos a un usuario existente
+
+
+- GRANT ALL ON SPIDERMAN_DB.* TO 'JULIANG313'@'%';
+
+
+GRANT ALL PRIVILEGES → le da control total sobre esa base al usuario.
+
+SPIDERMAN_DB.* → limita los privilegios solo a la base SPIDERMAN_DB.
+
+FLUSH PRIVILEGES → actualiza los permisos sin reiniciar MariaDB.
+
+
+# OTROS COMANDOS
+
+
+( GRANT ALL ON *.* TO 'JULIANG313'@'%'; --> Funciona para dar permisos, pero no le permite otorgar permisos a otros usuarios.
+
+GRANT ALL PRIVILEGES ON *.* TO 'JULIANG313'@'%' WITH GRANT OPTION; --> otorgar todos los privilegios globales y la capacidad de dar permisos a otros (como root) en MariaDB/MySQL
+
+REVOKE ALL PRIVILEGES, GRANT OPTION ON *.* FROM 'JULIANG313'@'%'; --> quitar todos los privilegios globales)
+
+
+FLUSH PRIVILEGES; --> aplica los cambios inmediatamente
+
+
+
+
+4️⃣ Salir del cliente
+
+- EXIT;
+
+
+
+INICIALIZAR FRONT-END:
+
+
+- npm create vite@latest
+
+- npm install @vitejs/plugin-react -E
+
+- npm install react react-dom -E
+
+- npm run dev --> para correr la app

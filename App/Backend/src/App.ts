@@ -24,7 +24,7 @@ const port = process.env.PORT ?? 1235;
 
 const WSS = new WebSocketServer({ server });
 
-WSS.on("connection", (ws) => {
+/*WSS.on("connection", (ws) => {
   console.log("✅ Cliente conectado");
 
   // Evento cuando el cliente manda un mensaje
@@ -46,7 +46,7 @@ WSS.on("connection", (ws) => {
   ws.on("close", () => {
     console.log("❌ Cliente desconectado");
   });
-});
+});*/
 
 server.listen(port, () => {
   console.log(`El server se ejecuta en el puerto: http://localhost:${port}`);
