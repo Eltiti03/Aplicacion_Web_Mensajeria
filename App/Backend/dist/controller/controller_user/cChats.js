@@ -1,8 +1,22 @@
-import { Chat_Web } from "../models/mariaDB/mChats.js";
-import { validateLogin, validateUser } from "../models/validations/schemas.js";
-import bcrypt from "bcrypt";
+// App/Backend/src/controller/controller_user/cChat.ts
+import { Router } from "express";
+import { Chat_Web } from "../../models/mariaDB/mChats.js";
+import { validateLogin, validateUser, } from "../../models/validations/schemas.js";
 export class cChatsWeb {
-    static async cpostaggClient(req, res) {
+    userServices;
+    chatweb;
+    constructor(userServices, chatweb) {
+        this.userServices = userServices;
+        this.chatweb = chatweb;
+    }
+    listenRouter() {
+        const router = Router();
+        router.post("/register", this.cpostaggClient.bind(this));
+        router.get("/userlist", cChatsWeb.cgetClients);
+        router.post("/login", this.cpostLogin.bind(this));
+        return router;
+    }
+    async cpostaggClient(req, res) {
         try {
             const result = validateUser(req.body);
             console.log(req.body);
@@ -12,7 +26,7 @@ export class cChatsWeb {
                     .status(422)
                     .json({ error: "Digite los datos correctamente... (aggClient)" });
             }
-            const caggClient = await Chat_Web.mpostaggClient(result.data);
+            const caggClient = await this.chatweb.mpostaggClient(result.data);
             return res.status(201).json({ success: true, caggClient });
         }
         catch (error) {
@@ -21,7 +35,7 @@ export class cChatsWeb {
                 .json({ error: "Error en el servidor!! (aggClient)" });
         }
     }
-    static async cpostLogin(req, res) {
+    async cpostLogin(req, res) {
         const result = validateLogin(req.body);
         try {
             if (!result.success) {
@@ -33,7 +47,7 @@ export class cChatsWeb {
                 const cLogin = await Chat_Web.mpostLogin(result.data);
                 const pass = result.data.PASS_HASH;
                 const reqLogin = result.data;
-                const hash_val = await bcrypt.compare(pass, cLogin[0].PASS_HASH);
+                const hash_val = await this.userServices.passCompare(pass, cLogin[0].PASS_HASH);
                 if (cLogin[0].MAIL === reqLogin.MAIL && hash_val === true) {
                     console.log("credenciales correctas!!");
                     res.status(201).json({ success: true, reqLogin });

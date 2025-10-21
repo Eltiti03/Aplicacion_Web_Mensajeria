@@ -1,11 +1,15 @@
-//App.ts
+// // App/Backend/src/App.ts
 
 import express from "express";
 import { createServer } from "http";
+import dotenv from "dotenv";
 import { WebSocketServer } from "ws";
 import cors from "cors";
-import { router } from "./models/routes/rChats.js";
+import { cChatsWeb } from "./controller/controller_user/cChats.js";
+import { UserServices } from "./services/userServices.service.js";
+import { Chat_Web } from "./models/mariaDB/mChats.js";
 
+dotenv.config();
 const app = express();
 
 app.use(
@@ -15,38 +19,34 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use("/", router);
+const rchatsWeb = new cChatsWeb(
+  new UserServices(),
+  new Chat_Web(new UserServices())
+);
 
-const server = createServer(app);
+app.use(express.json());
+app.use("/chat", rchatsWeb.listenRouter());
+
+export const server = createServer(app);
 
 const port = process.env.PORT ?? 1235;
 
-const WSS = new WebSocketServer({ server });
+export const wss = new WebSocketServer({ server });
 
-/*WSS.on("connection", (ws) => {
-  console.log("✅ Cliente conectado");
+wss.on("connection", (socket) => {
+  console.log("Cliente conectado!!");
 
-  // Evento cuando el cliente manda un mensaje
-  ws.on("message", (data) => {
-    console.log("📩 Mensaje recibido:", data.toString());
+  socket.send("Conexion establecida con exito!!");
 
-    // Puedes responder al mismo cliente
-    ws.send("Mensaje recibido: " + data.toString());
-
-    // O reenviar a todos los clientes conectados (broadcast)
-    WSS.clients.forEach((client) => {
-      if (client.readyState === ws.OPEN) {
-        client.send(`Broadcast: ${data.toString()}`);
-      }
-    });
+  socket.on("message", (data) => {
+    console.log(`Mensaje recibido del cliente: ${data}`);
+    socket.send(`Mensaje recibido: ${data}`);
   });
 
-  // Evento cuando el cliente se desconecta
-  ws.on("close", () => {
-    console.log("❌ Cliente desconectado");
+  socket.on("close", () => {
+    console.log("Cliente desconectado!!");
   });
-});*/
+});
 
 server.listen(port, () => {
   console.log(`El server se ejecuta en el puerto: http://localhost:${port}`);

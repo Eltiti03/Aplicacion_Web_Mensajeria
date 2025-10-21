@@ -1,3 +1,5 @@
+// App/Backend/src/models/validations/schemas.ts
+
 import z from "zod";
 
 export const userSchema = z.object({
@@ -5,7 +7,7 @@ export const userSchema = z.object({
   MAIL: z.string().email().trim(),
   PASS_HASH: z.string(),
   /*.regex(/!@#$%^&*()/, "Debe contener almenos un caracter especial"),*/
-  CREATED_AT: z.date().optional()
+  CREATED_AT: z.date().optional(),
 });
 
 export const loginSchema = z.object({

@@ -1,13 +1,36 @@
-import { Request, Response } from "express";
-import { Chat_Web } from "../models/mariaDB/mChats.js";
-import { validateLogin, validateUser } from "../models/validations/schemas.js";
-import bcrypt from "bcrypt"
+// App/Backend/src/controller/controller_user/cChat.ts
+
+import { Request, Response, Router } from "express";
+import { Chat_Web } from "../../models/mariaDB/mChats.js";
+import {
+  validateLogin,
+  validateUser,
+} from "../../models/validations/schemas.js";
+import { UserServices } from "../../services/userServices.service.js";
 
 export class cChatsWeb {
-  static async cpostaggClient(req: Request, res: Response) {
+  protected userServices: UserServices;
+  protected chatweb: Chat_Web;
+
+  constructor(userServices: UserServices, chatweb: Chat_Web) {
+    this.userServices = userServices;
+    this.chatweb = chatweb;
+  }
+
+  listenRouter() {
+    const router = Router();
+
+    router.post("/register", this.cpostaggClient.bind(this));
+    router.get("/userlist", cChatsWeb.cgetClients);
+    router.post("/login", this.cpostLogin.bind(this));
+
+    return router;
+  }
+
+  async cpostaggClient(req: Request, res: Response) {
     try {
       const result = validateUser(req.body);
-      console.log(req.body)
+      console.log(req.body);
       console.log({ success: result });
 
       if (!result.success) {
@@ -15,7 +38,7 @@ export class cChatsWeb {
           .status(422)
           .json({ error: "Digite los datos correctamente... (aggClient)" });
       }
-      const caggClient = await Chat_Web.mpostaggClient(result.data);
+      const caggClient = await this.chatweb.mpostaggClient(result.data);
       return res.status(201).json({ success: true, caggClient });
     } catch (error) {
       return res
@@ -23,7 +46,7 @@ export class cChatsWeb {
         .json({ error: "Error en el servidor!! (aggClient)" });
     }
   }
-  static async cpostLogin(req: Request, res: Response) {
+  async cpostLogin(req: Request, res: Response) {
     const result = validateLogin(req.body);
 
     try {
@@ -34,14 +57,14 @@ export class cChatsWeb {
       } else {
         const cLogin = await Chat_Web.mpostLogin(result.data);
 
-        const pass = result.data.PASS_HASH
+        const pass = result.data.PASS_HASH;
         const reqLogin = result.data;
-        const hash_val = await bcrypt.compare(pass, cLogin[0].PASS_HASH)
-        if (
-          cLogin[0].MAIL === reqLogin.MAIL &&
-          hash_val === true
-        ) {
-          console.log("credenciales correctas!!")
+        const hash_val = await this.userServices.passCompare(
+          pass,
+          cLogin[0].PASS_HASH
+        );
+        if (cLogin[0].MAIL === reqLogin.MAIL && hash_val === true) {
+          console.log("credenciales correctas!!");
           res.status(201).json({ success: true, reqLogin });
         } else {
           res
@@ -63,9 +86,4 @@ export class cChatsWeb {
       res.status(500).json({ error: "Error del servidor!! (getClients)" });
     }
   }
-
-// CONTROLADORES DE EVENTOS WEBSOCKET
-
-//WSS.on()
-
 }

@@ -1,86 +1,49 @@
+// App/Backend/models/mariaDB/mChats.ts
+
 import { randomUUID } from "crypto";
-import mariadb from "mariadb";
-import bcrypt from "bcrypt"
-
-const pool = mariadb.createPool({
-  host: "192.168.0.169",
-  user: "JULIAN1044",
-  port: 3307,
-  password: "1234567890",
-  database: "CHAT_WEB",
-  connectionLimit: 10,
-  bigIntAsNumber: true,
-});
-
-export interface client {
-  ID?: string;
-  MAIL: string;
-  PASS_HASH: string;
-  CREATED_AT?: Date;
-
-}
-
+import { UserServices } from "../../services/userServices.service.js";
+import { executeQuery } from "./conn.js";
+import { client } from "../interfaces/user.interface.js";
 export class Chat_Web {
-  static async mpostaggClient(input: client) {
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      
+  userServices: UserServices;
 
-      const newClient = {
-        ID: randomUUID(),
-        MAIL: input.MAIL,
-        PASS_HASH: input.PASS_HASH,
-      };
+  constructor(userServices: UserServices) {
+    this.userServices = userServices;
+  }
 
-      const hash = await bcrypt.hash(newClient.PASS_HASH, 12)
-      //console.log({encrypt: hash})
+  async mpostaggClient(input: client) {
+    const newClient = {
+      ID: randomUUID(),
+      MAIL: input.MAIL,
+      PASS_HASH: input.PASS_HASH,
+    };
 
-      const result = await conn.query(
-        "INSERT INTO USERS (ID, MAIL, PASS_HASH) VALUE (?,?,?)",
-        [newClient.ID, newClient.MAIL, hash]
-      );
-      const mensaje = { info: result };
-      console.log(mensaje);
+    const hash = await this.userServices.passHash(newClient.PASS_HASH);
 
-      return newClient;
-    } catch (error) {
-      throw error;
-    } finally {
-      if (conn) conn.release();
-    }
+    const result = "INSERT INTO USERS (ID, MAIL, PASS_HASH) VALUE (?,?,?)";
+    const params = [newClient.ID, newClient.MAIL, hash];
+
+    await executeQuery(result, params);
+
+    return newClient;
   }
 
   static async mpostLogin(correo: client) {
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      const result = await conn.query("SELECT * FROM USERS WHERE MAIL = ?", [
-        correo.MAIL,
-      ]);
-      if (result.length !== 0) {
-        return result;
-      } else {
-        return false;
-      }
-    } catch (error) {
-    } finally {
-      if (conn) conn.release();
+    const query = "SELECT * FROM USERS WHERE MAIL = ?";
+    const params = [correo.MAIL];
+
+    const result = await executeQuery(query, params);
+    if (result.length !== 0) {
+      return result;
+    } else {
+      return false;
     }
   }
 
   static async mgetClient() {
-    let conn;
-    try {
-      conn = await pool.getConnection();
+    const result = "SELECT * FROM USERS";
+    const resultF = await executeQuery(result);
 
-      const result = await conn.query("SELECT * FROM USERS");
-
-      return result;
-    } catch (error) {
-      throw error;
-    } finally {
-      if (conn) conn.release();
-    }
+    return resultF;
   }
 }
